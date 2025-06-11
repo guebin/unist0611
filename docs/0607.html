@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.42">
+
+  <meta name="author" content="Guebin Choi">
+  <meta name="dcterms.date" content="2025-06-11">
+  <title>Exploring Multiscale Methods</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-2f366650f320edcfcf53d73c80250a32.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Exploring Multiscale Methods</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Guebin Choi 
+</div>
+</div>
+</div>
+
+  <p class="date">2025-06-11</p>
+</section>
+<section id="presentation-outline" class="slide level2">
+<h2>Presentation Outline</h2>
+<ul>
+<li>Introduction: What are Multiscale Methods?</li>
+<li>Basis Expansion Methods</li>
+<li>Data-Adaptive Approaches</li>
+<li>My Recent Research Interests</li>
+</ul>
+</section>
+<section>
+<section id="introduction" class="title-slide slide level1 center">
+<h1>Introduction</h1>
+
+</section>
+<section class="slide level2">
+
+<h3 id="이상한-변호사-우영우-2022">이상한 변호사 우영우 (2022)</h3>
+<blockquote>
+<p>이상한 변호사 우영우 (2022) 7부, 우영우가 많은 문서들 사이에서 필요한 문구를 기억하는 장면</p>
+</blockquote>
+<div style="text-align: center;">
+<p><iframe width="855" height="472.5" src="https://www.youtube.com/embed/5J1B6845VkM?start=96&amp;end=160" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""> </iframe></p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="what-are-multiscale-methods">What are Multiscale Methods?</h3>
+<p>A Multiresolution Analysis (MRA) of <span class="math inline">\(L^2(\mathbb{R})\)</span> is a sequence of closed subspaces <span class="math inline">\(\{V_j\}_{j \in \mathbb{Z}}\)</span> such that:</p>
+<ul>
+<li><span class="math inline">\(V_j \subset V_{j+1}\)</span></li>
+<li><span class="math inline">\(\overline{\bigcup_j V_j} = L^2(\mathbb{R})\)</span>, <span class="math inline">\(\bigcap_j V_j = \{0\}\)</span></li>
+<li><span class="math inline">\(f(x) \in V_j \iff f(2x) \in V_{j+1}\)</span></li>
+<li><span class="math inline">\(f(x) \in V_0 \Rightarrow f(x - k) \in V_0\)</span> for all <span class="math inline">\(k \in \mathbb{Z}\)</span></li>
+</ul>
+<p>These spaces represent signals at different resolutions and form the basis for wavelet analysis.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="what-are-multiscale-methods-1">What are Multiscale Methods?</h3>
+<p>By adopting the definition from <span class="citation" data-cites="nason2008wavelet">Nason (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span>, a multiscale method can be described as</p>
+<blockquote>
+<p>“Multiscale methods are approaches that represent data at multiple scales and managing this representation simultaneously.”</p>
+</blockquote>
+</section>
+<section class="slide level2">
+
+<h3 id="principal-component-analysis">Principal Component Analysis</h3>
+<ul>
+<li>The most well-known multiscale method in signal processing is Fourier transform.</li>
+<li>But for data scientists, the most familiar multiscale method is likely PCA (Principal Component Analysis).</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="principal-component-analysis-1">Principal Component Analysis</h3>
+<ul>
+<li>PCA is a technique that considers the covariance between variables in the original data and creates new axes called principal components.</li>
+<li>The first principal component determines the direction of maximum variance, and subsequent principal components are orthogonal to the previous principal components and maximize the remaining variance.</li>
+</ul>
+</section>
+<section class="slide level2 scrollable">
+
+<h3 id="principal-component-analysis-2">Principal Component Analysis</h3>
+<ul>
+<li>When only a few initial components are used to represent data, this is often described as a dimensionality reduction of data.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/irispca.png"></p>
+<figcaption>Figure<sup>1</sup>: Visualization of the Iris dataset before and after dimensionality reduction. The left panel shows the original 3D projection of the data, while the right panel shows the reconstruction after projecting onto the first two principal components and then mapping back to the original space.</figcaption>
+</figure>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>from <a href="https://guebin.github.io/SC2024/14wk-1.html" class="uri">https://guebin.github.io/SC2024/14wk-1.html</a></p></li></ol></aside></section>
+<section class="slide level2">
+
+<h3 id="principal-component-analysis-3">Principal Component Analysis</h3>
+<ul>
+<li>From a multiscale perspective, this can be described as viewing data on a “global scale” or “coarsening data”.</li>
+</ul>
+
+<img data-src="figs/mspca.jpg" class="r-stretch quarto-figure-center"><p class="caption">Figure: Illustration of the multiscale interpretation of Principal Component Analysis (PCA). Viewing the data through the first few principal components provides a coarse, global summary, while the later components capture finer, local details.</p></section>
+<section class="slide level2">
+
+<h3 id="principal-component-analysis-4">Principal Component Analysis</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>PCA Term</strong></th>
+<th><strong>Multiscale Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Principal Component (PC)</td>
+<td>Scale-specific representation</td>
+</tr>
+<tr class="even">
+<td>Eigenvalue decomposition</td>
+<td>Decomposition into multiple scales</td>
+</tr>
+<tr class="odd">
+<td>Leading components</td>
+<td>Coarse scale / Global structure</td>
+</tr>
+<tr class="even">
+<td>Trailing components</td>
+<td>Fine scale / Local detail</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level2">
+
+<h3 id="multiscale-thinking-in-practice">Multiscale Thinking in Practice</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Application</strong></th>
+<th><strong>Multiscale Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dimensionality Reduction</td>
+<td>Keeping only a few essential (coarse) scales</td>
+</tr>
+<tr class="even">
+<td>Denoising / Estimation</td>
+<td>Using only strong or dominant scales</td>
+</tr>
+<tr class="odd">
+<td>Detection</td>
+<td>Focusing on specific scales where phenomena are visible</td>
+</tr>
+<tr class="even">
+<td>Multiscale Visualization</td>
+<td>Showing magnitude across all scales</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level2">
+
+<h3 id="multiscale-thinking-in-practice-1">Multiscale Thinking in Practice</h3>
+
+<img data-src="figs/msapplications.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Schematic illustration of multiscale decomposition and its applications. By decomposing data into multiple scales, one can enable various tasks such as dimensionality reduction, denoising, anomaly detection, and multiscale visualization.</p></section>
+<section class="slide level2">
+
+<h3 id="simpsons-paradox">Simpson’s Paradox</h3>
+<ul>
+<li><p>Imagine we’re looking at the free throw performance of two basketball players, A and B. Suppose that in each season, Player B had a higher success rate than Player A.</p></li>
+<li><p>Even so, could it be that Player A ends up with a higher overall success rate when we combine the data from both seasons?</p></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="simpsons-paradox-1">Simpson’s Paradox</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Player</th>
+<th>Season 1</th>
+<th>Season 2</th>
+<th>Overall</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>70% (7/10)</td>
+<td>95% (950/1000)</td>
+<td><strong>94.8%</strong></td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td><strong>80%</strong> (8/10)</td>
+<td><strong>100%</strong> (4/4)</td>
+<td>85.7%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local scale (season-by-season)</strong></p>
+<ul>
+<li>Player B is better in every individual season.</li>
+</ul>
+<p><strong>Global scale (overall)</strong></p>
+<ul>
+<li>Player A wins overall. (Player A took far more shots, especially in Season 2, and maintained a high success rate)</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="simpsons-paradox-2">Simpson’s Paradox</h3>
+<p><strong>Summary of UC Berkeley Admission Data (1973)</strong></p>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Overall</a></li><li><a href="#tabset-1-2">Department</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Group</th>
+<th>Applicants</th>
+<th>Admitted (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Men</td>
+<td>2,691</td>
+<td>45%</td>
+</tr>
+<tr class="even">
+<td>Women</td>
+<td>1,835</td>
+<td>30%</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div id="tabset-1-2">
+<table class="caption-top">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 23%">
+<col style="width: 20%">
+<col style="width: 25%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dept</th>
+<th>Applicants (Men)</th>
+<th>Admitted (Men)</th>
+<th>Applicants (Women)</th>
+<th>Admitted (Women)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td><strong>825</strong> 🟨</td>
+<td>62%</td>
+<td>108</td>
+<td><strong>82%</strong> 🟩</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td><strong>560</strong> 🟨</td>
+<td>63%</td>
+<td>25</td>
+<td><strong>68%</strong> 🟩</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>325</td>
+<td><strong>37%</strong> 🟩</td>
+<td><strong>593</strong> 🟨</td>
+<td>34%</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td><strong>417</strong> 🟨</td>
+<td>33%</td>
+<td>375</td>
+<td><strong>35%</strong> 🟩</td>
+</tr>
+<tr class="odd">
+<td>E</td>
+<td>191</td>
+<td><strong>28%</strong> 🟩</td>
+<td><strong>393</strong> 🟨</td>
+<td>24%</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td><strong>373</strong> 🟨</td>
+<td>6%</td>
+<td>341</td>
+<td><strong>7%</strong> 🟩</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>🟩: Higher admission rate than the other gender<br>
+</li>
+<li>🟨: Greater number of applicants than the other gender</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2 scrollable">
+
+<h3 id="simpsons-paradox-3">Simpson’s Paradox</h3>
+<ul>
+<li>While gender may influence admission rates, it doesn’t appear that UC Berkeley showed a preference for male applicants.</li>
+<li>Rather, perhaps we should seriously consider why so many female applicants chose to apply to departments with lower admission rates.<sup>1</sup></li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn2"><p><span class="citation" data-cites="김용대2021데이터">김용대 (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p></li></ol></aside></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="basis-expansion-methods" class="title-slide slide level1 center">
+<h1>Basis Expansion Methods</h1>
+
+</section>
+<section class="slide level2">
+
+<h3 id="fourier-transform">Fourier Transform</h3>
+<ul>
+<li>Fourier transform (FT) converts a signal (or data) from the time domain to the frequency domain.</li>
+<li>It plays a crucial role in time-frequency analysis, allowing us to examine the signal’s frequency information.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-1">Fourier Transform</h3>
+<p><strong>Decomposition</strong></p>
+<div style="overflow-x: auto; overflow-y: auto; max-height: 200vh;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="0607_files/figure-revealjs/64c2805a-44fb-445b-8763-ebf8410edbf6-1-13e2dd7a-4b48-48c1-9870-8e41d954d124.png"></p>
+<figcaption>Figure: Time series <span class="math inline">\(y_n\)</span> and its components and the corresponding spectra. From top to bottom, time series <span class="math inline">\(y_n\)</span> with noise <span class="math inline">\(\epsilon_n\)</span>, constant component <span class="math inline">\(\text{const}\)</span>, low-frequency component <span class="math inline">\(l_n=9 \sin(2 \pi t_n)\)</span>, and high-frequency component <span class="math inline">\(h_n=4 \cos(4 \times 2 \pi t_n)\)</span>. Each spectrum graph displays the frequency (<span class="math inline">\(x\)</span>-axis) and the magnitude (<span class="math inline">\(y\)</span>-axis) of the components, illustrating how different frequency components contribute to the overall structure of <span class="math inline">\(y_n\)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-2">Fourier Transform</h3>
+<p><strong>Denoising</strong></p>
+
+<img data-src="figs/FFT_denoised.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The true signal (green) is a sum of two sine waves. Gaussian noise (red, transparent) is added. The denoised signal (blue) is reconstructed by applying FFT, removing frequency components with power below a threshold, and performing inverse FFT.</p></section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-3">Fourier Transform</h3>
+<p><strong>Detection</strong></p>
+
+<img data-src="figs/soi.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Time series of the Southern Oscillation Index (SOI) and fish recruitment (1950–1987), showing interannual and seasonal variability with potential correlation.</p></section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-4">Fourier Transform</h3>
+<p><strong>Detection</strong></p>
+
+<img data-src="figs/raw_comparison.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Raw periodograms of SOI and recruitment series, showing dominant low-frequency and seasonal components with high variance due to lack of smoothing.</p></section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-5">Fourier Transform</h3>
+<p><strong>Detection</strong></p>
+
+<img data-src="figs/smoothed_comparison.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Smoothed periodograms of SOI and recruitment series</p></section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-6">Fourier Transform</h3>
+<ul>
+<li>Many signals in the real world are well represented by sinusoidal functions. FT (or DFT) provides considerable benefits in analyzing such signals.</li>
+<li>However, FT (or DFT) has some limitations. It can only analyze stationary time series, which is disadvantageous for interpreting signals with abrupt changes, such as step functions.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-7">Fourier Transform</h3>
+
+<img data-src="figs/Gibbs.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Fourier series approximation of a step function, showing improved accuracy with an increasing number of terms (1, 3, 7, 31) but persistent Gibbs phenomenon at discontinuities.</p></section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-8">Fourier Transform</h3>
+<ul>
+<li>Even signals well-suited for representation in sinusoidal functions struggle when applied to signals whose frequency changes over time.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-9">Fourier Transform</h3>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1"><span class="math inline">\(f(x)\)</span></a></li><li><a href="#tabset-2-2"><span class="math inline">\(\int f(x) \sin(4x)dx\)</span></a></li><li><a href="#tabset-2-3"><span class="math inline">\(\int f(x) \sin(8x)dx\)</span></a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/pw1.png"></p>
+<figcaption>Figure: A non-stationary signal exhibiting an abrupt frequency change from <span class="math inline">\(\sin(4x)\)</span> to <span class="math inline">\(\sin(8x)\)</span> at <span class="math inline">\(t=0\)</span>, illustrating a common challenge for global frequency analysis.</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-2-2">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/pw2.png"></p>
+<figcaption>Figure: Illustration of integrating a fixed sinusoidal basis function, <span class="math inline">\(\sin(4x)\)</span> (red), with a non-stationary signal (gray) that undergoes a frequency change at <span class="math inline">\(t=0\)</span>, highlighting the challenge of identifying local frequency content using global Fourier analysis.</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-2-3">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/pw3.png"></p>
+<figcaption>Figure: Illustration of integrating a fixed sinusoidal basis function, sin(8x) (red), with a non-stationary signal (gray) that changes frequency at <span class="math inline">\(t=0\)</span>, demonstrating how global basis functions capture only average or dominant frequency content over time.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="fourier-transform-10">Fourier Transform</h3>
+<p><strong>Chirp signal</strong></p>
+
+<img data-src="figs/chirp.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: A chirp signal, a common example of a non-stationary signal, where the instantaneous frequency continuously increases over time.</p></section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform">Short-Time Fourier Transform</h3>
+<ul>
+<li>Short-time Fourier transform (STFT) is one of many efforts to overcome the aforementioned shortcomings of FT.</li>
+<li>STFT (or DSTFT) divides time series data into smaller segments and then performs FT and DFT on each segment separately.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-1">Short-Time Fourier Transform</h3>
+
+<img data-src="figs/FTSTFTbasis.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Comparison of global Fourier basis functions (top) and time-localized Short-Time Fourier Transform (STFT) basis functions (bottom).</p></section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-2">Short-Time Fourier Transform</h3>
+<ul>
+<li>When the entire time series is divided into smaller segments the information about frequency becomes less accurate because there are not enough samples to determine the exact frequency.</li>
+<li>If the entire time series is divided into larger chunks by the window size, the opposite effect occurs; frequency estimates become more accurate, but the information about “which point in time” becomes ambiguous.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-3">Short-Time Fourier Transform</h3>
+<div style="overflow-x: auto; overflow-y: auto; max-height: 200vh;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/spectrogram_chirp.png"></p>
+<figcaption>Figure: Comparison of time-varying frequency signal (top), its global Discrete Fourier Transform (DFT) spectrum (middle), and its time-frequency spectrogram using Short-Time Fourier Transform (STFT) (bottom).</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-4">Short-Time Fourier Transform</h3>
+<ul>
+<li>From a multiscale perspective, setting a larger window size implies viewing data at a global scale, while setting a smaller window size implies viewing data at a local scale.</li>
+<li>Thus, the window size controls how much to zoom in or out to view data. Hence, the window size of STFT can be interpreted as a multiscale parameter.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-5">Short-Time Fourier Transform</h3>
+
+<img data-src="figs/STFTscale.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The window size in the Short-Time Fourier Transform (STFT) as a multiscale parameter. A larger window provides a global view of the data, while a smaller window allows for a more localized examination.</p></section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-6">Short-Time Fourier Transform</h3>
+<p><em>Uncertainty principle</em></p>
+
+<img data-src="figs/STFT_tradeoff.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The time-frequency resolution trade-off, illustrating that improving resolution in one domain (time or frequency) typically comes at the cost of reduced resolution in the other.</p></section>
+<section class="slide level2">
+
+<h3 id="short-time-fourier-transform-7">Short-Time Fourier Transform</h3>
+<div style="overflow-x: auto; overflow-y: auto; max-height: 200vh;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/STFT_hopping.png"></p>
+<figcaption>Figure: Comparison of STFT spectrograms for a frequency-hopping signal (top) using a small window (middle) for better time resolution and a large window (bottom) for better frequency resolution.</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="wavelet">Wavelet</h3>
+<p>Let’s return to the figure below.</p>
+
+<img data-src="figs/Gibbs.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Fourier series approximation of a step function.</p><ul>
+<li>Such signals also reveal the limitations of the STFT.</li>
+<li>Capturing abrupt changes requires the superposition of a large number of Fourier bases.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="wavelet-1">Wavelet</h3>
+
+<img data-src="figs/harr.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Harr orthogonal wavelet basis function.</p></section>
+<section class="slide level2">
+
+<h3 id="wavelet-2">Wavelet</h3>
+
+<img data-src="figs/wt_chirp.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Haar wavelet approximations of a chirp signal at multiple scales. Fine-scale details diminish as the resolution becomes coarser.</p></section>
+<section class="slide level2">
+
+<h3 id="wavelet-3">Wavelet</h3>
+
+<img data-src="figs/astronaut_reconstruction.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Multiscale approximations of the astronaut image.</p></section>
+<section class="slide level2">
+
+<h3 id="wavelet-4">Wavelet</h3>
+
+<img data-src="figs/wavelet_denoising.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Wavelet-based denoising of the astronaut image. From left to right: original grayscale image, noisy image, and denoised result.</p></section>
+<section class="slide level2">
+
+<h3 id="wavelet-5">Wavelet</h3>
+
+<img data-src="figs/wavelet_level.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: Wavelet decomposition of the astronaut image up to Level 5 using the Daubechies-4 wavelet. Each column corresponds to a decomposition level, showing the horizontal (LH), vertical (HL), and diagonal (HH) detail coefficients from top to bottom. The final column shows the approximation (LL) at Level 5, representing the coarsest-scale structure of the image.</p></section>
+<section class="slide level2">
+
+<h3 id="wavelet-6">Wavelet</h3>
+<ul>
+<li>Wavelets, strong in multi-resolution image analysis, were key in traditional signal processing like edge detection and denoising.</li>
+<li>However, deep learning, particularly CNNs, with their automatic feature learning from data, have largely superseded wavelets in high-dimensional tasks.</li>
+</ul>
+</section></section>
+<section>
+<section id="data-adaptive-methods" class="title-slide slide level1 center">
+<h1>Data-Adaptive Methods</h1>
+
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition">Empirical Mode Decomposition</h3>
+<ul>
+<li>Empirical mode decomposition (EMD), introduced by <span class="citation" data-cites="huang1998empirical">Huang et al. (<a href="#/references" role="doc-biblioref" onclick="">1998</a>)</span>, is a data-driven method that decomposes a signal into simpler components known as intrinsic mode functions (IMFs).</li>
+<li>Unlike the basis expansion approach, which depends on predefined basis functions, EMD identifies local oscillations within the signal itself and adaptively extracts them.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-1">Empirical Mode Decomposition</h3>
+
+<img data-src="figs/beat.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: This illustrates amplitude modulation, where the sum of two close frequencies produces an envelope modulated at their different frequency.</p></section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-2">Empirical Mode Decomposition</h3>
+<ul>
+<li>The intrinsic mode function (IMF) seeks to view <span class="math inline">\(2\cos\left(2\pi t_n\right) \cos\left(60\pi t_n\right)\)</span> itself as a single basis.</li>
+<li>The IMF was first proposed by <span class="citation" data-cites="huang1998empirical">Huang et al. (<a href="#/references" role="doc-biblioref" onclick="">1998</a>)</span> and was originally defined using local extrema and zero-crossings. Recently, a definition that incorporates the concept of modulation is widely used <span class="citation" data-cites="dragomiretskiy2013variational">(<a href="#/references" role="doc-biblioref" onclick="">Dragomiretskiy and Zosso 2013</a>)</span>.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-3">Empirical Mode Decomposition</h3>
+<p>According to this definition, an intrinsic mode function (IMF) is an amplitude-modulated frequency-modulated (AM-FM) signal expressed as</p>
+<p><span class="math display">\[s_k(t) = a_k(t)\cos(\theta_k(t))\]</span></p>
+<p>where <span class="math inline">\(\theta_k(t)\)</span> is a non-decreasing, time-varying phase, and <span class="math inline">\(a_k(t)\)</span> represents a non-negative, time-varying envelope function. Both the envelope function <span class="math inline">\(a_k(t)\)</span> and the instantaneous frequency <span class="math inline">\(\omega_k(t)= \theta_k^{\prime}(t)\)</span> change at a much slower rate than the phase <span class="math inline">\(\theta_k(t)\)</span>, ensuring smooth modulation over time.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-4">Empirical Mode Decomposition</h3>
+<div style="overflow-x: auto; overflow-y: auto; max-height: 200vh;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/sifting_process.png"></p>
+<figcaption>Figure: This illustrates amplitude modulation, where the sum of two close frequencies produces an envelope modulated at their different frequency.</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-5">Empirical Mode Decomposition</h3>
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-6">Empirical Mode Decomposition</h3>
+<ul>
+<li>It does not rely on predefined basis functions.</li>
+<li>The number of basis components (IMFs) is not fixed in advance.</li>
+<li>Since the basis is not known a priori, traditional projection-based approaches for computing coefficients are not applicable.</li>
+<li>In fact, the notion of “coefficients” is absent altogether—IMFs are extracted iteratively through sifting rather than via linear expansion.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="empirical-mode-decomposition-7">Empirical Mode Decomposition</h3>
+<ul>
+<li><strong>Nevertheless, EMD clearly embodies the concept of multiscale.</strong></li>
+<li>EMD breaks down the data into meaningful components (IMFs). These components are analyzed together to understand the overall structure.</li>
+<li>This ordering and interpretability match well with <span class="citation" data-cites="nason2008wavelet">Nason (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span>’s definition of multiscale methods</li>
+</ul>
+<blockquote>
+<p>“Multiscale methods are approaches that represent data at multiple scales and managing this representation simultaneously.”</p>
+</blockquote>
+</section>
+<section class="slide level2">
+
+<h3 id="other-methods">Other Methods</h3>
+<p><strong>Thick-pen Transform</strong></p>
+<ul>
+<li><span class="citation" data-cites="fryzlewicz2011thick">Fryzlewicz and Oh (<a href="#/references" role="doc-biblioref" onclick="">2011</a>)</span> introduced the thick-pen transform (TPT) to visualize time series data using pens of varying thicknesses.</li>
+<li>TPT operates on a multiscale principle, where thicker pens highlight the coarser-scale characteristics of data, while thinner pens depict the finer-scale details.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="other-methods-1">Other Methods</h3>
+
+<img data-src="figs/tpt_firstfig.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: (Left) A time series plot of white noise followed by a sine wave and (right) a visualization by thick-pen transform with thickness 10.</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-2">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+<ul>
+<li><p>If TPT is understood as “drawing” a signal once with a thick pen, Elastic-band Transform (EBT) can be understood as tracing a signal repeatedly with a pencil of the same thickness to create a “dessin.” <span class="citation" data-cites="choi2023elastic">(<a href="#/references" role="doc-biblioref" onclick="">Choi and Oh 2023</a>)</span></p></li>
+<li><p>A “dessin” can be made with short, fine touches or long, rough touches, depending on the purpose. In EBT, short or long touches can be adjusted by controlling how consistently the signal is tracked at a regular `interval’ <span class="math inline">\(\tau\)</span>.</p></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="other-methods-3">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt1.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-4">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt2.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-5">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt3.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-6">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt4.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-7">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt5.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-8">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt6.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-9">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt9.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="other-methods-10">Other Methods</h3>
+<p><strong>Elastic-band Transform</strong></p>
+
+<img data-src="figs/ebt12.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: The elastic-band idea</p></section>
+<section class="slide level2">
+
+<h3 id="my-recent-research-interests">My Recent Research Interests</h3>
+<ul>
+<li>Applying multiscale methods to non-Euclidean data.</li>
+<li>Traditional multiscale methods have been developed in Euclidean spaces, where notions such as global vs.&nbsp;local and low vs.&nbsp;high frequency are well-defined.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="my-recent-research-interests-1">My Recent Research Interests</h3>
+
+<img data-src="figs/noneuclid/fig4_rev_3graph.png" class="r-stretch quarto-figure-center"><p class="caption">Figure: This figure illustrates wavelet transform results for graphs <span class="math inline">\({\cal G}_1\)</span>, <span class="math inline">\({\cal G}_2\)</span>, and <span class="math inline">\({\cal G}_3\)</span>. Each graph exhibits distinct nodal connectivity, and the lower panels display the spectrum of the corresponding wavelet coefficients, <span class="math inline">\(\hat{f}(\lambda_l)\)</span>, for each graph. <span class="citation" data-cites="shuman2013emerging">(<a href="#/references" role="doc-biblioref" onclick="">Shuman et al. 2013</a>)</span></p></section>
+<section class="slide level2">
+
+<h3 id="my-recent-research-interests-2">My Recent Research Interests</h3>
+<ul>
+<li>However, recent data types—e.g., manifolds, graphs, and topological structures are non-Euclidean, where these notions may flip or become ambiguous.</li>
+<li>I am currently exploring how to develop multiscale frameworks suitable for such domains.</li>
+</ul>
+</section></section>
+<section>
+<section id="qa-session" class="title-slide slide level1 center">
+<h1>Q&amp;A Session</h1>
+
+</section>
+<section id="references" class="slide level2 scrollable smaller">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-choi2023elastic" class="csl-entry" role="listitem">
+Choi, Guebin, and Hee-Seok Oh. 2023. <span>“Elastic-Band Transform for Visualization and Detection.”</span> <em>Pattern Recognition Letters</em> 166: 119–25.
+</div>
+<div id="ref-dragomiretskiy2013variational" class="csl-entry" role="listitem">
+Dragomiretskiy, Konstantin, and Dominique Zosso. 2013. <span>“Variational Mode Decomposition.”</span> <em>IEEE Transactions on Signal Processing</em> 62 (3): 531–44.
+</div>
+<div id="ref-fryzlewicz2011thick" class="csl-entry" role="listitem">
+Fryzlewicz, Piotr, and H-S Oh. 2011. <span>“Thick Pen Transformation for Time Series.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 73 (4): 499–529.
+</div>
+<div id="ref-huang1998empirical" class="csl-entry" role="listitem">
+Huang, Norden E, Zheng Shen, Steven R Long, Manli C Wu, Hsing H Shih, Quanan Zheng, Nai-Chyuan Yen, Chi Chao Tung, and Henry H Liu. 1998. <span>“The Empirical Mode Decomposition and the Hilbert Spectrum for Nonlinear and Non-Stationary Time Series Analysis.”</span> <em>Proceedings of the Royal Society of London. Series A: Mathematical, Physical and Engineering Sciences</em> 454 (1971): 903–95.
+</div>
+<div id="ref-nason2008wavelet" class="csl-entry" role="listitem">
+Nason, Guy P. 2008. <em>Wavelet Methods in Statistics with r</em>. New York: Springer.
+</div>
+<div id="ref-shuman2013emerging" class="csl-entry" role="listitem">
+Shuman, David I, Sunil K Narang, Pascal Frossard, Antonio Ortega, and Pierre Vandergheynst. 2013. <span>“The Emerging Field of Signal Processing on Graphs: Extending High-Dimensional Data Analysis to Networks and Other Irregular Domains.”</span> <em>IEEE Signal Processing Magazine</em> 30 (3): 83–98.
+</div>
+<div id="ref-김용대2021데이터" class="csl-entry" role="listitem">
+김용대. 2021. <em>데이터 과학자의 사고법: 더 나은 선택을 위한 통계학적 통찰의 힘</em>. 김영사.
+</div>
+</div>
+
+
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

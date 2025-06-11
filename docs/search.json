@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "0607.html#presentation-outline",
+    "href": "0607.html#presentation-outline",
+    "title": "Exploring Multiscale Methods",
+    "section": "Presentation Outline",
+    "text": "Presentation Outline\n\nIntroduction: What are Multiscale Methods?\nBasis Expansion Methods\nData-Adaptive Approaches\nMy Recent Research Interests"
+  },
+  {
+    "objectID": "0607.html#references",
+    "href": "0607.html#references",
+    "title": "Exploring Multiscale Methods",
+    "section": "References",
+    "text": "References\n\n\nChoi, Guebin, and Hee-Seok Oh. 2023. “Elastic-Band Transform for Visualization and Detection.” Pattern Recognition Letters 166: 119–25.\n\n\nDragomiretskiy, Konstantin, and Dominique Zosso. 2013. “Variational Mode Decomposition.” IEEE Transactions on Signal Processing 62 (3): 531–44.\n\n\nFryzlewicz, Piotr, and H-S Oh. 2011. “Thick Pen Transformation for Time Series.” Journal of the Royal Statistical Society Series B: Statistical Methodology 73 (4): 499–529.\n\n\nHuang, Norden E, Zheng Shen, Steven R Long, Manli C Wu, Hsing H Shih, Quanan Zheng, Nai-Chyuan Yen, Chi Chao Tung, and Henry H Liu. 1998. “The Empirical Mode Decomposition and the Hilbert Spectrum for Nonlinear and Non-Stationary Time Series Analysis.” Proceedings of the Royal Society of London. Series A: Mathematical, Physical and Engineering Sciences 454 (1971): 903–95.\n\n\nNason, Guy P. 2008. Wavelet Methods in Statistics with r. New York: Springer.\n\n\nShuman, David I, Sunil K Narang, Pascal Frossard, Antonio Ortega, and Pierre Vandergheynst. 2013. “The Emerging Field of Signal Processing on Graphs: Extending High-Dimensional Data Analysis to Networks and Other Irregular Domains.” IEEE Signal Processing Magazine 30 (3): 83–98.\n\n\n김용대. 2021. 데이터 과학자의 사고법: 더 나은 선택을 위한 통계학적 통찰의 힘. 김영사."
+  },
+  {
+    "objectID": "codes/도브시4.html",
+    "href": "codes/도브시4.html",
+    "title": "",
+    "section": "",
+    "text": "import numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy import signal\nimport pywt\n\n# 방법 1: PyWavelets 라이브러리 사용\ndef plot_db4_pywt():\n    # Daubechies-1 웨이블릿 함수 생성\n    wavelet = pywt.Wavelet('db1')\n    phi, psi, x = wavelet.wavefun(level=8)\n    \n    plt.figure(figsize=(12, 5))\n    \n    # 스케일링 함수 (아버지 웨이블릿)\n    plt.subplot(1, 2, 1)\n    plt.plot(x, phi, 'b-', linewidth=2)\n    plt.title('Harr father wavelet (φ)')\n    plt.xlabel('')\n    plt.ylabel('')\n    plt.grid(True, alpha=0.3)\n    \n    # 웨이블릿 함수 (어머니 웨이블릿)\n    plt.subplot(1, 2, 2)\n    plt.plot(x, psi, 'r-', linewidth=2)\n    plt.title('Harr mother wavelet (ψ)')\n    plt.xlabel('')\n    plt.ylabel('')\n    plt.grid(True, alpha=0.3)\n    \n    plt.tight_layout()\n#    plt.show()\n    plt.savefig(\"daubechies4.png\")\n\n# # 방법 2: 수동으로 계수를 사용하여 구현\n# def plot_db4_manual():\n#     # Daubechies-4 필터 계수\n#     h = np.array([\n#         0.6830127, 1.1830127, 0.3169873, -0.1830127,\n#         -0.0546875, 0.0312500, 0.0078125, -0.0078125\n#     ])\n    \n#     # 스케일링 함수 계산 (반복적 방법)\n#     def scaling_function(h, iterations=10):\n#         n = len(h)\n#         x = np.linspace(0, n-1, 2**(iterations+1))\n#         phi = np.zeros_like(x)\n#         phi[len(phi)//2] = 1  # 초기값\n        \n#         for i in range(iterations):\n#             phi_new = np.zeros_like(phi)\n#             for k in range(len(h)):\n#                 idx = 2*np.arange(len(phi)) - k\n#                 valid = (idx &gt;= 0) & (idx &lt; len(phi))\n#                 phi_new[valid] += h[k] * phi[idx[valid]]\n#             phi = phi_new * np.sqrt(2)\n            \n#         return x, phi\n    \n#     # 웨이블릿 함수 계산\n#     def wavelet_function(h):\n#         g = np.zeros_like(h)\n#         for k in range(len(h)):\n#             g[k] = (-1)**k * h[len(h)-1-k]\n#         return g\n    \n#     x, phi = scaling_function(h)\n#     g = wavelet_function(h)\n#     x_psi, psi = scaling_function(g)\n    \n#     plt.figure(figsize=(12, 5))\n    \n#     # 스케일링 함수\n#     plt.subplot(1, 2, 1)\n#     plt.plot(x, phi, 'b-', linewidth=2)\n#     plt.title('Daubechies-4 스케일링 함수 (φ)')\n#     plt.xlabel('시간')\n#     plt.ylabel('진폭')\n#     plt.grid(True, alpha=0.3)\n    \n#     # 웨이블릿 함수\n#     plt.subplot(1, 2, 2)\n#     plt.plot(x_psi, psi, 'r-', linewidth=2)\n#     plt.title('Daubechies-4 웨이블릿 함수 (ψ)')\n#     plt.xlabel('시간')\n#     plt.ylabel('진폭')\n#     plt.grid(True, alpha=0.3)\n    \n#     plt.tight_layout()\n#     plt.show()\n\n\nplot_db4_pywt()"
+  }
+]
